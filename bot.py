@@ -2,6 +2,9 @@ import discord
 import random
 import json
 from discord.ext import commands
+from api import api_key
+import time
+
 
 client = commands.Bot(command_prefix='login ')
 
@@ -11,6 +14,7 @@ print(type(data))
 # print(data)
 print(len(data))
 
+# print(api_key)
 
 @client.event
 async def on_ready():
@@ -31,4 +35,13 @@ async def fortune(ctx):
     print(data[index].get('fortune'))
     await ctx.send(f"Today's fortune: {fortune}")
 
-client.run('')
+@client.command()
+async def future(ctx):
+    print("I see darkness inside you")
+    await ctx.send("I see darkness inside you")
+    time.sleep(3)
+    print("Oh... My bad. It's your poop")
+    await ctx.send("Oh... My bad. It's your poop")
+
+
+client.run(api_key)
