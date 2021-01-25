@@ -40,8 +40,15 @@ async def future(ctx):
     print("I see darkness inside you")
     await ctx.send("I see darkness inside you")
     time.sleep(3)
+    print(client.user.name)
+    print(ctx.author.name)
     print("Oh... My bad. It's your poop")
     await ctx.send("Oh... My bad. It's your poop")
 
+@client.command()
+async def justin(message):
+    await message.send("Yo")
+    time.sleep(2)
+    await message.send("Is that you {}".format(message.author.name))
 
 client.run(api_key)
