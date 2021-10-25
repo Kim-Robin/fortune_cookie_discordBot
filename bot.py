@@ -33,7 +33,7 @@ async def fortune(ctx):
     print(index)
     fortune = data[index].get('fortune')
     print(data[index].get('fortune'))
-    await ctx.send(f"Today's fortune: {fortune}")
+    await ctx.send(f"Today's fortune: {fortune} 🙏 ")
 
 @client.command()
 async def future(ctx):
