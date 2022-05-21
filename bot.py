@@ -4,11 +4,16 @@ import json
 from discord.ext import commands
 from api import api_key
 import time
+import os
 
 
 client = commands.Bot(command_prefix='login ')
 
-f = open('fortune.json', "r")
+dirName = os.path.dirname(__file__) + '/fortune.json'
+
+print(dirName)
+
+f = open(dirName, "r")
 data = json.loads(f.read())
 print(type(data))
 # print(data)
