@@ -5,11 +5,15 @@ from discord.ext import commands
 from api import api_key
 import time
 import os
+import schedule
 
+humanList = []
 
 client = commands.Bot(command_prefix='login ')
 
-dirName = os.path.dirname(__file__) + '/fortune.json'
+# path = os.getcwd()
+# dirName = os.path.dirname(path) + '/fortune.json'
+dirName = os.getcwd() + '/fortune.json'
 
 print(dirName)
 
@@ -20,6 +24,12 @@ print(type(data))
 print(len(data))
 
 # print(api_key)
+
+def clear_human():
+    humanList.clear()
+
+schedule.every().day.at("00:00").do(clear_human)
+
 
 @client.event
 async def on_ready():
@@ -34,11 +44,15 @@ async def on_ready():
     # print(f'{member} has left a server.')
 @client.command()
 async def fortune(ctx):
-    index = random.randint(0,356)
-    print(index)
-    fortune = data[index].get('fortune')
-    print(data[index].get('fortune'))
-    await ctx.send(f"Today's fortune: {fortune} 🙏 ")
+    if ctx.author.name not in humanList:
+        index = random.randint(0,356)
+        print(index)
+        fortune = data[index].get('fortune')
+        print(data[index].get('fortune'))
+        await ctx.send(f"Today's fortune: {fortune} 🙏 ")
+        humanList.append(ctx.author.name)
+    else:
+        await ctx.send("You already got fortune today")
 
 @client.command()
 async def future(ctx):
@@ -56,4 +70,26 @@ async def justin(message):
     time.sleep(2)
     await message.send("Is that you {}".format(message.author.name))
 
+@client.command()
+async def past(message):
+    await message.send("The past is in the past")
+    time.sleep(1)
+    await message.send("Let it go, Let it go")
+    time.sleep(1)
+    await message.send("When I'll rise like the break of dawn")
+    time.sleep(1)
+    await message.send("Let it go, Let it go")
+    time.sleep(1)
+    await message.send("That perfect girl is gone")
+    time.sleep(1)
+    await message.send("Here I stand in the light of day")
+    time.sleep(1)
+    await message.send("Let the storm rage on")
+    time.sleep(1)
+    await message.send("The cold never bothered me anyway")
+
 client.run(api_key)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
