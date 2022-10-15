@@ -9,7 +9,9 @@ import schedule
 
 humanList = []
 
-client = commands.Bot(command_prefix='login ', case_insensitive=True)
+
+
+client = commands.Bot(command_prefix=['login ', 'Login '])
 
 # path = os.getcwd()
 dirName = os.path.dirname(__file__) + '/fortune.json'
