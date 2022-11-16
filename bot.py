@@ -97,7 +97,7 @@ async def schedule_daily():
     while True:
         now = datetime.datetime.now()
         # then = now + datetime.timedelta(days=1)
-        then = now.replace(hour=0, minute=0)
+        then = now.replace(hour=24, minute=0)
         wait_time = (then - now).total_seconds()
         
         await asyncio.sleep(wait_time)
