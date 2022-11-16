@@ -6,6 +6,7 @@ from api import api_key
 import time
 import os
 import schedule
+import requests, json, random, datetime, asyncio
 
 humanList = []
 
@@ -28,9 +29,11 @@ print(len(data))
 # print(api_key)
 
 def clear_human():
+    print("reset happens")
     humanList.clear()
+    print(humanList)
 
-schedule.every().day.at("00:00").do(clear_human)
+# schedule.every().day.at("00:00").do(clear_human)
 
 
 @client.event
@@ -90,8 +93,26 @@ async def past(message):
     time.sleep(1)
     await message.send("The cold never bothered me anyway")
 
+async def schedule_daily():
+    while True:
+        now = datetime.datetime.now()
+        # then = now + datetime.timedelta(days=1)
+        then = now.replace(hour=0, minute=0)
+        wait_time = (then - now).total_seconds()
+        
+        await asyncio.sleep(wait_time)
+
+        channel = client.get_channel(708819813396643940)
+
+        clear_human()
+        await channel.send("Fortune cookie Re-Calibrated. Have a good day!")
+
+@client.event
+async def on_ready():
+    await schedule_daily()
+
 client.run(api_key)
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# while True:
+#    schedule.run_pending()
+#    time.sleep(1)
