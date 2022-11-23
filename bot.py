@@ -33,20 +33,6 @@ def clear_human():
     humanList.clear()
     print(humanList)
 
-# schedule.every().day.at("00:00").do(clear_human)
-
-
-@client.event
-async def on_ready():
-    print('Bot is ready.')
-
-# @client.event
-# async def on_member_join(member):
-    # print(f'{member} has joined a server.')
-
-# @client.event
-# async def on_member_remove(member):
-    # print(f'{member} has left a server.')
 @client.command()
 async def fortune(ctx):
     if ctx.author.name not in humanList:
@@ -96,8 +82,8 @@ async def past(message):
 async def schedule_daily():
     while True:
         now = datetime.datetime.now()
-        # then = now + datetime.timedelta(days=1)
-        then = now.replace(hour=24, minute=0)
+        then = now + datetime.timedelta(days=1)
+        # then = now.replace(hour=24, minute=0)
         wait_time = (then - now).total_seconds()
         
         await asyncio.sleep(wait_time)
@@ -109,10 +95,8 @@ async def schedule_daily():
 
 @client.event
 async def on_ready():
+    print('Bot is ready.')
     await schedule_daily()
 
 client.run(api_key)
 
-# while True:
-#    schedule.run_pending()
-#    time.sleep(1)
