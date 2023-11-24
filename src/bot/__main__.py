@@ -1,32 +1,27 @@
 import discord
+from discord.ext import commands, tasks
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import random
 import json
-from discord.ext import commands
-from api import api_key
 import time
+import datetime
 import os
-import schedule
 import requests, json, random, datetime, asyncio
 
 humanList = []
+intents = discord.Intents.default()
 
+client = commands.Bot(command_prefix=['login ', 'Login '], intents=intents)
 
-
-client = commands.Bot(command_prefix=['login ', 'Login '])
-
-# path = os.getcwd()
-dirName = os.path.dirname(__file__) + '/fortune.json'
-# dirName = os.getcwd() + '/fortune.json'
-
+# dirName = os.path.dirname(__file__) + '/fortune.json'
+dirName = os.environ.get("FORTUNE_LOCATION")
 print(dirName)
 
 f = open(dirName, "r")
 data = json.loads(f.read())
 print(type(data))
-# print(data)
 print(len(data))
 
-# print(api_key)
 
 def clear_human():
     print("reset happens")
@@ -79,24 +74,23 @@ async def past(message):
     time.sleep(1)
     await message.send("The cold never bothered me anyway")
 
+@tasks.loop(hours=24)
 async def schedule_daily():
-    while True:
-        now = datetime.datetime.now()
-        then = now + datetime.timedelta(days=1)
-        # then = now.replace(hour=24, minute=0)
-        wait_time = (then - now).total_seconds()
-        
-        await asyncio.sleep(wait_time)
+    # channel = client.get_channel(708819813396643940)
+    channel_id = os.environ.get("FORTUNE_CLIENT_CHANNEL")
+    channel = client.get_channel(int(channel_id))
 
-        channel = client.get_channel(708819813396643940)
-
-        clear_human()
-        await channel.send("Fortune cookie Re-Calibrated. Have a good day!")
+    clear_human()
+    await channel.send("Fortune cookie Re-Calibrated. Have a good day!")
 
 @client.event
 async def on_ready():
     print('Bot is ready.')
     await schedule_daily()
 
+scheduler = AsyncIOScheduler()
+scheduler.add_job(schedule_daily.start, trigger="cron", hour=7, minute=48, second=21)
+
+api_key = os.environ.get("FORTUNE_COOKIE_DISCORD_KEY")
 client.run(api_key)
 

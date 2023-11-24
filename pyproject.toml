@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fortune_cookie"
+version = "0.1.0"
+dependencies = [
+    "discord.py",
+    "cx_Freeze",
+    "pyinstaller",
+    "apscheduler", 
+    "requests", 
+    "bs4"
+]
+
+
+
+
+
