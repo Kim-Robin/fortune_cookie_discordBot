@@ -1,60 +1,56 @@
 import discord
 from discord.ext import commands, tasks
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from discord.flags import Intents
 import random
 import json
 import time
 import datetime
 import os
-import requests, json, random, datetime, asyncio
 
-humanList = []
-intents = discord.Intents.default()
+userList: list = []
+intents: Intents = discord.Intents.default()
+intents.message_content = True
+client = commands.Bot(command_prefix=["login ", "Login "], intents=intents)
 
-client = commands.Bot(command_prefix=['login ', 'Login '], intents=intents)
+api_key: str = os.environ.get("FORTUNE_COOKIE_DISCORD_KEY", "")
+dirName: str = os.environ.get("FORTUNE_LOCATION", "")
 
-# dirName = os.path.dirname(__file__) + '/fortune.json'
-dirName = os.environ.get("FORTUNE_LOCATION")
-print(dirName)
+utc: datetime.timezone = datetime.timezone.utc
+reset_time: datetime.time = datetime.time(hour=12, minute=13, tzinfo=utc)
 
-f = open(dirName, "r")
-data = json.loads(f.read())
-print(type(data))
-print(len(data))
+fortune_json = open(dirName, "r")
+data = json.loads(fortune_json.read())
 
 
 def clear_human():
     print("reset happens")
-    humanList.clear()
-    print(humanList)
+    userList.clear()
+
 
 @client.command()
 async def fortune(ctx):
-    if ctx.author.name not in humanList:
-        index = random.randint(0,356)
-        print(index)
-        fortune = data[index].get('fortune')
-        print(data[index].get('fortune'))
+    if ctx.author.name not in userList:
+        index = random.randint(0, 356)
+        fortune = data[index].get("fortune")
         await ctx.send(f"Today's fortune: {fortune} 🙏 ")
-        humanList.append(ctx.author.name)
+        userList.append(ctx.author.name)
     else:
         await ctx.send("You already got fortune today")
 
+
 @client.command()
 async def future(ctx):
-    print("I see darkness inside you")
     await ctx.send("I see darkness inside you")
     time.sleep(3)
-    print(client.user.name)
-    print(ctx.author.name)
-    print("Oh... My bad. It's your poop")
     await ctx.send("Oh... My bad. It's your poop")
+
 
 @client.command()
 async def justin(message):
     await message.send("Yo")
     time.sleep(2)
     await message.send("Is that you {}".format(message.author.name))
+
 
 @client.command()
 async def past(message):
@@ -74,23 +70,23 @@ async def past(message):
     time.sleep(1)
     await message.send("The cold never bothered me anyway")
 
-@tasks.loop(hours=24)
+
+@tasks.loop(time=reset_time)
 async def schedule_daily():
-    # channel = client.get_channel(708819813396643940)
-    channel_id = os.environ.get("FORTUNE_CLIENT_CHANNEL")
+    channel_id: str = os.environ.get("FORTUNE_CLIENT_CHANNEL", "")
     channel = client.get_channel(int(channel_id))
 
-    clear_human()
-    await channel.send("Fortune cookie Re-Calibrated. Have a good day!")
+    if channel:
+        if isinstance(channel, discord.channel.TextChannel):
+            clear_human()
+            await channel.send("Fortune cookie Re-Calibrated. Have a good day!")
+
 
 @client.event
 async def on_ready():
-    print('Bot is ready.')
-    await schedule_daily()
+    print("Bot is ready.")
+    await schedule_daily.start()
 
-scheduler = AsyncIOScheduler()
-scheduler.add_job(schedule_daily.start, trigger="cron", hour=7, minute=48, second=21)
 
-api_key = os.environ.get("FORTUNE_COOKIE_DISCORD_KEY")
-client.run(api_key)
-
+def main():
+    client.run(api_key)
