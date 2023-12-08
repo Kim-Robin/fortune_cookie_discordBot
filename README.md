@@ -4,4 +4,4 @@
 
 ## python discord.py 
 ## Docker containerization
-# ```docker run``` need three environment variable
+# ```docker run``` need three environment variable for discord bot
