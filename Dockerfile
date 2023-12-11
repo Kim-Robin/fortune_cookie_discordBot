@@ -11,7 +11,7 @@ RUN apt-get install -y curl
 RUN apt-get install -y libffi-dev
 RUN apt-get install -y libssl-dev
 RUN apt-get install build-essential
-RUN apt-get install cargo
+RUN apt-get install -y cargo
 RUN rm -rf /var/lib/apt/lists/*
 # Install Rust
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
