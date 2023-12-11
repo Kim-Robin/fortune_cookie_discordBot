@@ -12,8 +12,11 @@ RUN apt-get install -y libffi-dev
 RUN apt-get install -y libssl-dev
 RUN rm -rf /var/lib/apt/lists/*
 
-# Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+RUN apt-get install -y build-essential
+
+# Install Rust for ARM architecture
+RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y \
+    && /root/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf
 
 # Set environment variables
 ENV PATH="/root/.cargo/bin:${PATH}"
