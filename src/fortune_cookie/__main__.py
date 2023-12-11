@@ -90,3 +90,4 @@ async def on_ready():
 
 def main():
     client.run(api_key)
+    print("closing")
