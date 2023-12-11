@@ -12,8 +12,8 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Install dependencies
-RUN pip install --no-cache-dir poetry && \
-    poetry install --no-root --no-dev
+RUN pip install --no-cache-dir poetry
+RUN poetry install --no-root --no-dev
 
 # Copy the rest of the application code
 COPY . .
