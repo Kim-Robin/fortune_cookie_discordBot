@@ -6,16 +6,19 @@ WORKDIR /app
 # Copy only the files needed for installing dependencies
 COPY pyproject.toml poetry.lock ./
 
+RUN apt-get update 
+RUN apt-get install -y curl 
+RUN apt-get install -y libffi-dev
+RUN apt-get install -y libssl-dev
+RUN rm -rf /var/lib/apt/lists/*
+
 # Install Rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
 # Set environment variables
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN rustc --version
-
-RUN apt-get update 
-RUN apt-get install -y libffi-dev
-RUN apt-get install -y libssl-dev
 
 RUN pip install -U pip setuptools
 RUN pip install --upgrade cffi
