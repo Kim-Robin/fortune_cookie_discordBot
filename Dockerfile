@@ -11,6 +11,14 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 # Set environment variables
 ENV PATH="/root/.cargo/bin:${PATH}"
 
+RUN apt-get update 
+RUN apt-get install -y libffi-dev
+RUN apt-get install -y libssl-dev
+
+RUN pip install -U pip setuptools
+RUN pip install --upgrade cffi
+RUN pip install cryptography
+
 # Install dependencies
 RUN pip install --no-cache-dir poetry
 RUN poetry install --no-root --no-dev
