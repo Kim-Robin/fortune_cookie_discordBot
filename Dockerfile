@@ -10,9 +10,9 @@ RUN apt-get update
 RUN apt-get install -y curl 
 RUN apt-get install -y libffi-dev
 RUN apt-get install -y libssl-dev
+RUN apt-get install build-essential
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN apt-get install -y build-essential
 
 # Install Rust for ARM architecture
 RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y \
