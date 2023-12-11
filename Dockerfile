@@ -21,8 +21,6 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y \
 # Set environment variables
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-RUN rustc --version
-
 RUN pip install -U pip setuptools
 RUN pip install --upgrade cffi
 RUN pip install cryptography
