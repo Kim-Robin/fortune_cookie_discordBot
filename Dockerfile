@@ -7,7 +7,7 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 
 # Install Rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
 # Set environment variables
 ENV PATH="/root/.cargo/bin:${PATH}"
 
