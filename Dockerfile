@@ -28,8 +28,8 @@ COPY . .
 # Build the application (adjust the command based on your build process)
 RUN poetry build
 
-# Stage 2: Create a smaller image
-FROM python:3.11.6-slim
+# Stage 2: run image
+FROM python:3.11.6
 
 WORKDIR /app
 
