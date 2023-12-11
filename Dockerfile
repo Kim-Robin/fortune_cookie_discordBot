@@ -13,10 +13,6 @@ RUN apt-get install -y libssl-dev
 RUN apt-get install build-essential
 RUN apt-get install -y cargo
 RUN rm -rf /var/lib/apt/lists/*
-# Install Rust
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
-
 
 RUN pip install -U pip setuptools
 RUN pip install --upgrade cffi
