@@ -40,6 +40,7 @@ COPY --from=builder /app/dist /app/dist
 COPY ./src/scraper/fortune.json /app/dist
 ENV FORTUNE_LOCATION=/app/dist/fortune.json
 
+RUN apt-get install -y gcc
 
 # Install only the necessary runtime dependencies
 RUN pip install --no-cache-dir /app/dist/*.whl
