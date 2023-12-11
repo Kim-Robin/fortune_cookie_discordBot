@@ -11,6 +11,8 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 # Set environment variables
 ENV PATH="/root/.cargo/bin:${PATH}"
 
+RUN rustc --version
+
 RUN apt-get update 
 RUN apt-get install -y libffi-dev
 RUN apt-get install -y libssl-dev
