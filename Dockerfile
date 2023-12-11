@@ -13,12 +13,8 @@ RUN apt-get install -y libssl-dev
 RUN apt-get install build-essential
 RUN rm -rf /var/lib/apt/lists/*
 
-
-# Install Rust for ARM architecture
-RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y \
-    && /root/.cargo/bin/rustup target add arm-unknown-linux-gnueabihf
-
-# Set environment variables
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN pip install -U pip setuptools
