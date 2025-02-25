@@ -39,7 +39,7 @@ async def fortune(ctx):
         userList.append(ctx.author.name)
 
         # user can optionally provide a -v flag
-        if "-v" in ctx.message.content.lower():
+        if ctx.message.content.lower().strip() == "login fortune -v":
 
             payload = {
                 "text": fortune,
