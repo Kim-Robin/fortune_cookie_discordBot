@@ -6,6 +6,9 @@ import json
 import time
 import datetime
 import os
+import requests
+
+TTS_API_URL = "https://ac1b-68-192-120-5.ngrok-free.app/generate-tts"
 
 userList: list = []
 intents: Intents = discord.Intents.default()
@@ -34,6 +37,29 @@ async def fortune(ctx):
         fortune = data[index].get("fortune")
         await ctx.send(f"Today's fortune: {fortune} 🙏 ")
         userList.append(ctx.author.name)
+
+        # user can optionally provide a -v flag
+        if "-v" in ctx.message.content.lower():
+
+            payload = {
+                "text": fortune,
+                "voice_id": "hZz4EJXj5YyjJUDXB7aE", # hard coded for now..
+                "stability": 0.3,
+                "similarity_boost": 0.9
+            }
+
+            response = requests.post(TTS_API_URL, json=payload)
+
+            # attach mp3 file to fortune
+            if response.status_code == 200:
+                # save mp3 file
+                mp3_filename = "fortune.mp3"
+                with open(mp3_filename, "wb") as f:
+                    f.write(response.content)
+
+                await ctx.send(file=discord.File(mp3_filename))
+            else:
+                await ctx.send("TTS service failed. Could not generate audio.")
     else:
         await ctx.send("You already got fortune today")
 
