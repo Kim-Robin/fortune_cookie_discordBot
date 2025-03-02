@@ -9,6 +9,7 @@ import os
 import requests
 
 TTS_API_URL = "https://ac1b-68-192-120-5.ngrok-free.app/generate-tts"
+LOCAL_ENDPOINT = "http://localhost:8080/generate-tts"
 
 userList: list = []
 intents: Intents = discord.Intents.default()
@@ -31,28 +32,29 @@ def clear_human():
 
 
 @client.command()
-async def fortune(ctx):
-    if ctx.author.name not in userList:
-        index = random.randint(0, 356)
-        fortune = data[index].get("fortune")
-        await ctx.send(f"Today's fortune: {fortune} 🙏 ")
-        userList.append(ctx.author.name)
+async def fortune(ctx, *args):
 
-        # user can optionally provide a -v flag
-        if ctx.message.content.lower().strip() == "login fortune -v":
+    if "-v" in args:
+        if ctx.author.name not in userList:
+            index = random.randint(0, 356)
+            fortune = data[index].get("fortune")
+            await ctx.send(f"Today's fortune: {fortune} 🙏 ")
+            userList.append(ctx.author.name)
 
             payload = {
                 "text": fortune,
-                "voice_id": "hZz4EJXj5YyjJUDXB7aE", # hard coded for now..
-                "stability": 0.3,
-                "similarity_boost": 0.9
-            }
+                "voice_id": "hZz4EJXj5YyjJUDXB7aE", # todo: move voice id to service
+                "stability": 0.15,
+                "similarity_boost": 0.85,
+                "style": 0.6,
+                "use_speaker_boost": False,
+             }
 
             response = requests.post(TTS_API_URL, json=payload)
 
-            # attach mp3 file to fortune
+                # attach mp3 file to fortune
             if response.status_code == 200:
-                # save mp3 file
+                    # save mp3 file
                 mp3_filename = "fortune.mp3"
                 with open(mp3_filename, "wb") as f:
                     f.write(response.content)
@@ -60,8 +62,17 @@ async def fortune(ctx):
                 await ctx.send(file=discord.File(mp3_filename))
             else:
                 await ctx.send("TTS service failed. Could not generate audio.")
+        else:
+            await ctx.send("You already got fortune today")
     else:
-        await ctx.send("You already got fortune today")
+        if ctx.author.name not in userList:
+            index = random.randint(0, 356)
+            fortune = data[index].get("fortune")
+            await ctx.send(f"Today's fortune: {fortune} 🙏 ")
+            userList.append(ctx.author.name)
+
+        else:
+            await ctx.send("You already got fortune today")
 
 
 @client.command()
