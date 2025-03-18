@@ -8,7 +8,7 @@ import datetime
 import os
 import requests
 
-TTS_API_URL = "https://ac1b-68-192-120-5.ngrok-free.app/generate-tts"
+TTS_API_URL = "https://ba9a-68-192-120-5.ngrok-free.app/generate-tts"
 LOCAL_ENDPOINT = "http://localhost:8080/generate-tts"
 
 userList: list = []
