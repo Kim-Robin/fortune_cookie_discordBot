@@ -8,8 +8,6 @@ import datetime
 import os
 import requests
 
-TTS_API_URL = "https://ba9a-68-192-120-5.ngrok-free.app/generate-tts"
-LOCAL_ENDPOINT = "http://localhost:8080/generate-tts"
 
 userList: list = []
 intents: Intents = discord.Intents.default()
@@ -18,6 +16,8 @@ client = commands.Bot(command_prefix=["login ", "Login "], intents=intents)
 
 api_key: str = os.environ.get("FORTUNE_COOKIE_DISCORD_KEY", "")
 dirName: str = os.environ.get("FORTUNE_LOCATION", "")
+tts_endpoint: str = os.environ.get("TTS_ENDPOINT", "")
+voice_id: str = os.environ.get("VOICE_ID", "")
 
 utc: datetime.timezone = datetime.timezone.utc
 reset_time: datetime.time = datetime.time(hour=12, minute=13, tzinfo=utc)
@@ -43,14 +43,14 @@ async def fortune(ctx, *args):
 
             payload = {
                 "text": fortune,
-                "voice_id": "hZz4EJXj5YyjJUDXB7aE", # todo: move voice id to service
+                "voice_id": voice_id, # todo: move voice id to service
                 "stability": 0.15,
                 "similarity_boost": 0.85,
                 "style": 0.6,
                 "use_speaker_boost": False,
              }
 
-            response = requests.post(TTS_API_URL, json=payload)
+            response = requests.post(tts_endpoint, json=payload)
 
                 # attach mp3 file to fortune
             if response.status_code == 200:
